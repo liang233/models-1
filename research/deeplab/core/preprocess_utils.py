@@ -13,18 +13,18 @@
 # limitations under the License.
 # ==============================================================================
 
-"""Utility functions related to preprocessing inputs."""
+"""Utility functions效用函数 related to preprocessing inputs."""
 import tensorflow as tf
 
 
 def flip_dim(tensor_list, prob=0.5, dim=1):
-  """Randomly flips a dimension of the given tensor.
+  """Randomly flips 翻转 a dimension of the given tensor.
 
   The decision to randomly flip the `Tensors` is made together. In other words,
   all or none of the images pass in are flipped.
 
   Note that tf.random_flip_left_right and tf.random_flip_up_down isn't used so
-  that we can control for the probability as well as ensure the same decision
+  that we can control for the probability 可能性 几率 as well as ensure the same decision
   is applied across the images.
 
   Args:
@@ -33,7 +33,7 @@ def flip_dim(tensor_list, prob=0.5, dim=1):
     dim: The dimension to flip, 0, 1, ..
 
   Returns:
-    outputs: A list of the possibly flipped `Tensors` as well as an indicator
+    outputs: A list of the possibly flipped `Tensors` as well as an indicator 指示器
     `Tensor` at the end whose value is `True` if the inputs were flipped and
     `False` otherwise.
 
@@ -43,15 +43,15 @@ def flip_dim(tensor_list, prob=0.5, dim=1):
   random_value = tf.random_uniform([])
 
   def flip():
-    flipped = []
+    flipped = []#列表
     for tensor in tensor_list:
       if dim < 0 or dim >= len(tensor.get_shape().as_list()):
         raise ValueError('dim must represent a valid dimension.')
-      flipped.append(tf.reverse_v2(tensor, [dim]))
+      flipped.append(tf.reverse_v2(tensor, [dim]))#将tensor翻转第dim维之后的结果添加至列表末尾
     return flipped
 
-  is_flipped = tf.less_equal(random_value, prob)
-  outputs = tf.cond(is_flipped, flip, lambda: tensor_list)
+  is_flipped = tf.less_equal(random_value, prob)#逐元素地计算x≤y的真值并返回
+  outputs = tf.cond(is_flipped, flip, lambda: tensor_list) #如果is_flipped为真 返回flip() 否则返回tensor_list
   if not isinstance(outputs, (list, tuple)):
     outputs = [outputs]
   outputs.append(is_flipped)
