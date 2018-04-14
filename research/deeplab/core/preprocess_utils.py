@@ -52,7 +52,7 @@ def flip_dim(tensor_list, prob=0.5, dim=1):
 
   is_flipped = tf.less_equal(random_value, prob)#逐元素地计算x≤y的真值并返回
   outputs = tf.cond(is_flipped, flip, lambda: tensor_list) #如果is_flipped为真 返回flip() 否则返回tensor_list
-  if not isinstance(outputs, (list, tuple)):
+  if not isinstance(outputs, (list, tuple)):#判断一个对象的变量类型
     outputs = [outputs]
   outputs.append(is_flipped)
 
