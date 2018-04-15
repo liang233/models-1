@@ -61,9 +61,9 @@ def flip_dim(tensor_list, prob=0.5, dim=1):
 
 def pad_to_bounding_box(image, offset_height, offset_width, target_height,
                         target_width, pad_value):
-  """Pads the given image with the given pad_value.
+  """Pads 填充 the given image with the given pad_value.
 
-  Works like tf.image.pad_to_bounding_box, except it can pad the image
+  Works like tf.image.pad_to_bounding_box填充至特定尺寸, except it can pad the image
   with any given arbitrary pad value and also handle images whose sizes are not
   known during graph construction.
 
@@ -79,17 +79,17 @@ def pad_to_bounding_box(image, offset_height, offset_width, target_height,
     3-D tensor of shape [target_height, target_width, channels].
 
   Raises:
-    ValueError: If the shape of image is incompatible with the offset_* or
+    ValueError: If the shape of image is incompatible不相容 with the offset_* or
     target_* arguments.
   """
-  image_rank = tf.rank(image)
+  image_rank = tf.rank(image)#返回秩
   image_rank_assert = tf.Assert(
       tf.equal(image_rank, 3),
       ['Wrong image tensor rank [Expected] [Actual]',
-       3, image_rank])
-  with tf.control_dependencies([image_rank_assert]):
+       3, image_rank])# tf.equal(image_rank, 3)FALSE时输出第二个参数
+  with tf.control_dependencies([image_rank_assert]):#image_rank_assert执行完之后才会执行下面这条语句
     image -= pad_value
-  image_shape = tf.shape(image)
+  image_shape = tf.shape(image)#得到image的尺寸
   height, width = image_shape[0], image_shape[1]
   target_width_assert = tf.Assert(
       tf.greater_equal(
@@ -106,12 +106,11 @@ def pad_to_bounding_box(image, offset_height, offset_width, target_height,
       tf.logical_and(
           tf.greater_equal(after_padding_width, 0),
           tf.greater_equal(after_padding_height, 0)),
-      ['target size not possible with the given target offsets'])
-
-  height_params = tf.stack([offset_height, after_padding_height])
+      ['target size not possible with the given target offsets'])#padding之后的宽和高都得大于等于0 
+  height_params = tf.stack([offset_height, after_padding_height])#拼接，默认axis=0 奇怪的是参数不是张量 ...
   width_params = tf.stack([offset_width, after_padding_width])
   channel_params = tf.stack([0, 0])
-  with tf.control_dependencies([offset_assert]):
+  with tf.control_dependencies([offset_assert]):#offset_assert执行完之后才会执行下面这条语句
     paddings = tf.stack([height_params, width_params, channel_params])
   padded = tf.pad(image, paddings)
   return padded + pad_value
