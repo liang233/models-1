@@ -117,14 +117,14 @@ def pad_to_bounding_box(image, offset_height, offset_width, target_height,
 
 
 def _crop(image, offset_height, offset_width, crop_height, crop_width):
-  """Crops the given image using the provided offsets and sizes.
+  """Crops 修剪 the given image using the provided offsets 补偿 偏移 抵消 and sizes.
 
   Note that the method doesn't assume we know the input image size but it does
   assume we know the input image rank.
 
   Args:
     image: an image of shape [height, width, channels].
-    offset_height: a scalar tensor indicating the height offset.
+    offset_height: a scalar标量 标量的 数量的 tensor indicating the height offset.
     offset_width: a scalar tensor indicating the width offset.
     crop_height: the height of the cropped image.
     crop_width: the width of the cropped image.
@@ -141,13 +141,13 @@ def _crop(image, offset_height, offset_width, crop_height, crop_width):
 
   if len(image.get_shape().as_list()) != 3:
     raise ValueError('input must have rank of 3')
-  original_channels = image.get_shape().as_list()[2]
+  original_channels = image.get_shape().as_list()[2] # 得到第三维尺寸？
 
   rank_assertion = tf.Assert(
       tf.equal(tf.rank(image), 3),
       ['Rank of image must be equal to 3.'])
-  with tf.control_dependencies([rank_assertion]):
-    cropped_shape = tf.stack([crop_height, crop_width, original_shape[2]])
+  with tf.control_dependencies([rank_assertion]):#rank_assert执行完之后才会执行下面这条语句
+    cropped_shape = tf.stack([crop_height, crop_width, original_shape[2]]) #如何形象理解这个拼接呢？？？？？？？？？？？？？？？？？？？
 
   size_assertion = tf.Assert(
       tf.logical_and(
