@@ -160,7 +160,7 @@ def _crop(image, offset_height, offset_width, crop_height, crop_width):
   # Use tf.slice instead of crop_to_bounding box as it accepts tensors to
   # define the crop size.
   with tf.control_dependencies([size_assertion]):
-    image = tf.slice(image, offsets, cropped_shape)
+    image = tf.slice(image, offsets, cropped_shape)#对image的每一维从offset[i]开始切割 切割长度为cropped_shape[i]
   image = tf.reshape(image, cropped_shape)
   image.set_shape([crop_height, crop_width, original_channels])
   return image
@@ -195,13 +195,13 @@ def random_crop(image_list, crop_height, crop_width):
   rank_assertions = []
   for i in range(len(image_list)):
     image_rank = tf.rank(image_list[i])
-    rank_assert = tf.Assert(
+    rank_assert = tf.Assert(#返回一个警告？？？？？？？？？？？？？？？？？？？？？？？？？
         tf.equal(image_rank, 3),
         ['Wrong rank for tensor  %s [expected] [actual]',
          image_list[i].name, 3, image_rank])
     rank_assertions.append(rank_assert)
 
-  with tf.control_dependencies([rank_assertions[0]]):
+  with tf.control_dependencies([rank_assertions[0]]): #rank_assertions[0]到底是个啥玩意儿...
     image_shape = tf.shape(image_list[0])
   image_height = image_shape[0]
   image_width = image_shape[1]
@@ -211,7 +211,7 @@ def random_crop(image_list, crop_height, crop_width):
           tf.greater_equal(image_width, crop_width)),
       ['Crop size greater than the image size.'])
 
-  asserts = [rank_assertions[0], crop_size_assert]
+  asserts = [rank_assertions[0], crop_size_assert] #rank_assertions[0]到底是个啥玩意儿...
 
   for i in range(1, len(image_list)):
     image = image_list[i]
@@ -229,17 +229,17 @@ def random_crop(image_list, crop_height, crop_width):
         tf.equal(width, image_width),
         ['Wrong width for tensor %s [expected][actual]',
          image.name, width, image_width])
-    asserts.extend([height_assert, width_assert])
+    asserts.extend([height_assert, width_assert]) #extend合并两个list append将后一个list作为一个元素加到前一个list里面
 
   # Create a random bounding box.
   #
   # Use tf.random_uniform and not numpy.random.rand as doing the former would
-  # generate random numbers at graph eval time, unlike the latter which
+  # generate random numbers at graph eval 执行 time, unlike the latter which
   # generates random numbers at graph definition time.
   with tf.control_dependencies(asserts):
     max_offset_height = tf.reshape(image_height - crop_height + 1, [])
     max_offset_width = tf.reshape(image_width - crop_width + 1, [])
-  offset_height = tf.random_uniform(
+  offset_height = tf.random_uniform(#产生一个int32类型的一维整数张量 每一个值属于[0,MAXVAL)
       [], maxval=max_offset_height, dtype=tf.int32)
   offset_width = tf.random_uniform(
       [], maxval=max_offset_width, dtype=tf.int32)
@@ -268,21 +268,22 @@ def get_random_scale(min_scale_factor, max_scale_factor, step_size):
   if min_scale_factor == max_scale_factor:
     return tf.to_float(min_scale_factor)
 
-  # When step_size = 0, we sample the value uniformly from [min, max).
+  # When step_size = 0, we sample the value uniformly 一致地 相同地 from [min, max).
   if step_size == 0:
     return tf.random_uniform([1],
                              minval=min_scale_factor,
                              maxval=max_scale_factor)
 
-  # When step_size != 0, we randomly select one discrete value from [min, max].
+  # When step_size != 0, we randomly select one discrete 分离的 不相关联的 value from [min, max].
   num_steps = int((max_scale_factor - min_scale_factor) / step_size + 1)
   scale_factors = tf.lin_space(min_scale_factor, max_scale_factor, num_steps)
-  shuffled_scale_factors = tf.random_shuffle(scale_factors)
+  #tf.linspace(10.0, 12.0, 3, name="linspace") => [ 10.0  11.0  12.0]
+  shuffled_scale_factors = tf.random_shuffle(scale_factors)#沿着某一维度打乱
   return shuffled_scale_factors[0]
 
 
 def randomly_scale_image_and_label(image, label=None, scale=1.0):
-  """Randomly scales image and label.
+  """Randomly scales 测量 衡量 尺度 规模 image and label.
 
   Args:
     image: Image with shape [height, width, 3].
@@ -298,9 +299,9 @@ def randomly_scale_image_and_label(image, label=None, scale=1.0):
   image_shape = tf.shape(image)
   new_dim = tf.to_int32(tf.to_float([image_shape[0], image_shape[1]]) * scale)
 
-  # Need squeeze and expand_dims because image interpolation takes
+  # Need squeeze 挤 and expand_dims because image interpolation 改写 takes
   # 4D tensors as input.
-  image = tf.squeeze(tf.image.resize_bilinear(
+  image = tf.squeeze(tf.image.resize_bilinear(#使用双线性插值对图像进行resize
       tf.expand_dims(image, 0),
       new_dim,
       align_corners=True), [0])
