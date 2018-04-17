@@ -206,6 +206,7 @@ def xception_module(inputs,
   The output of one Xception module is equal to the sum of `residual` and
   `shortcut`, where `residual` is the feature computed by three separable
   convolution. The `shortcut` is the feature computed by 1x1 convolution with
+  1*1卷积一次只能得到一个w*h*1吗？
   or without striding. In some cases, the `shortcut` path could be a simple
   identity function or none (i.e, no shortcut).
 
