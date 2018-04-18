@@ -249,7 +249,7 @@ def random_crop(image_list, crop_height, crop_width):
 
 
 def get_random_scale(min_scale_factor, max_scale_factor, step_size):
-  """Gets a random scale value.
+  """Gets a random scale value.标度值 ？ 尺度值 ？ 规模值？
 
   Args:
     min_scale_factor: Minimum scale value.
@@ -302,11 +302,12 @@ def randomly_scale_image_and_label(image, label=None, scale=1.0):
   # Need squeeze 挤 and expand_dims because image interpolation 改写 takes
   # 4D tensors as input.
   image = tf.squeeze(tf.image.resize_bilinear(#使用双线性插值对图像进行resize
-      tf.expand_dims(image, 0),
+      tf.expand_dims(image, 0),#在第0轴位置增加一个维度
       new_dim,
-      align_corners=True), [0])
+      align_corners=True), [0])#第三个参数为对该operation命名
+  #给定张量输入，此操作返回相同类型的张量，并删除所有尺寸为1的尺寸。 如果不想删除所有尺寸1尺寸，可以通过指定第二个参数来删除特定尺寸1尺寸
   if label is not None:
-    label = tf.squeeze(tf.image.resize_nearest_neighbor(
+    label = tf.squeeze(tf.image.resize_nearest_neighbor(#改成了最近邻插值
         tf.expand_dims(label, 0),
         new_dim,
         align_corners=True), [0])
@@ -316,8 +317,8 @@ def randomly_scale_image_and_label(image, label=None, scale=1.0):
 
 def resolve_shape(tensor, rank=None, scope=None):
   """Fully resolves the shape of a Tensor.
-
-  Use as much as possible the shape components already known during graph
+  补全tensor尺寸信息
+  Use as much as possible the shape components 分量 成分 already known during graph
   creation and resolve the remaining ones during runtime.
 
   Args:
@@ -353,9 +354,10 @@ def resize_to_range(image,
                     scope=None,
                     method=tf.image.ResizeMethod.BILINEAR):
   """Resizes image or label so their sides are within the provided range.
-
+  若最小size调到min_size时其他size不超过max_size,则将最小size调到min_size 否则将最大size调到max_size
+  
   The output size can be described by two cases:
-  1. If the image can be rescaled so its minimum size is equal to min_size
+  1. If the image can be rescaled 重新调节 so its minimum size is equal to min_size
      without the other side exceeding max_size, then do so.
   2. Otherwise, resize so the largest side is equal to max_size.
 
