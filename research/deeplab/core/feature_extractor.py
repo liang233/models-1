@@ -13,8 +13,8 @@
 # limitations under the License.
 # ==============================================================================
 
-"""Extracts features for different models."""
-import functools
+"""Extracts 提取 features for different models. 需要xception 和 mobilenet的基础"""
+import functools#用于高阶函数：指那些作用于函数或者返回其它函数的函数
 import tensorflow as tf
 
 from deeplab.core import xception
