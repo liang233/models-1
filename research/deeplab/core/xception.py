@@ -20,7 +20,7 @@ Fran{\c{c}}ois Chollet
 https://arxiv.org/abs/1610.02357
 
 We implement the modified version by Jifeng Dai et al. for their COCO 2017
-detection challenge submission, where the model is made deeper and has aligned
+detection challenge submission, where the model is made deeper and has aligned 
 features for dense prediction tasks. See their slides for details:
 
 "Deformable Convolutional Networks -- COCO Detection and Segmentation Challenge
