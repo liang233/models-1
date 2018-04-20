@@ -20,7 +20,7 @@ Fran{\c{c}}ois Chollet
 https://arxiv.org/abs/1610.02357
 
 We implement the modified version by Jifeng Dai et al. for their COCO 2017
-detection challenge submission, where the model is made deeper and has aligned 
+detection challenge submission, where the model is made deeper and has aligned 对齐的 对准的  均衡的
 features for dense prediction tasks. See their slides for details:
 
 "Deformable Convolutional Networks -- COCO Detection and Segmentation Challenge
@@ -30,9 +30,9 @@ ICCV 2017 COCO Challenge workshop
 http://presentations.cocodataset.org/COCO17-Detect-MSRA.pdf
 
 We made a few more changes on top of MSRA's modifications:
-1. Fully convolutional: All the max-pooling layers are replaced with separable
-  conv2d with stride = 2. This allows us to use atrous convolution to extract
-  feature maps at any resolution.
+1. Fully convolutional: All the max-pooling layers are replaced with separable 可分离的
+  conv2d 也就是深度可分离卷积 with stride = 2. This allows us to use atrous convolution 稀疏卷积 to extract
+  feature maps at any resolution 分辨率.
 
 2. We support adding ReLU and BatchNorm after depthwise convolution, motivated
   by the design of MobileNetv1.
