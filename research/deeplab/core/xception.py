@@ -50,9 +50,7 @@ from tensorflow.contrib.slim.nets import resnet_utils
 
 slim = tf.contrib.slim
 
-
-_DEFAULT_MULTI_GRID = [1, 1, 1]
-
+_DEFAULT_MULTI_GRID = [1, 1, 1]#默认多重网格？
 
 class Block(collections.namedtuple('Block', ['scope', 'unit_fn', 'args'])):
   """A named tuple describing an Xception block.
