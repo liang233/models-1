@@ -54,7 +54,7 @@ _DEFAULT_MULTI_GRID = [1, 1, 1]#默认多重网格？
 
 class Block(collections.namedtuple('Block', ['scope', 'unit_fn', 'args'])):
   """A named tuple describing an Xception block.
-
+  定义一个namedtuple类型Block，并包含'scope', 'unit_fn'和'args'属性
   Its parts are:
     scope: The scope of the block.
     unit_fn: The Xception unit function which takes as input a tensor and
@@ -66,8 +66,8 @@ class Block(collections.namedtuple('Block', ['scope', 'unit_fn', 'args'])):
 
 
 def fixed_padding(inputs, kernel_size, rate=1):
-  """Pads the input along the spatial dimensions independently of input size.
-
+  """Pads the input along the spatial dimensions independently 无关地 of input size.
+  返回填充边界之后的tensor  如果是1*1卷积直接返回输入tesnor
   Args:
     inputs: A tensor of size [batch, height_in, width_in, channels].
     kernel_size: The kernel to be used in the conv2d or max_pool2d operation.
@@ -76,7 +76,7 @@ def fixed_padding(inputs, kernel_size, rate=1):
 
   Returns:
     output: A tensor of size [batch, height_out, width_out, channels] with the
-      input, either intact (if kernel_size == 1) or padded (if kernel_size > 1).
+      input, either intact 原封不动地 (if kernel_size == 1) or padded (if kernel_size > 1).
   """
   kernel_size_effective = kernel_size + (kernel_size - 1) * (rate - 1)
   pad_total = kernel_size_effective - 1
@@ -87,6 +87,8 @@ def fixed_padding(inputs, kernel_size, rate=1):
   return padded_inputs
 
 
+#只有用@slim.add_arg_scope修饰过的方法才能使用arg_scope设置默认参数从而使得代码变得苗条 
+# https://blog.csdn.net/weixin_35653315/article/details/78160886
 @slim.add_arg_scope
 def separable_conv2d_same(inputs,
                           num_outputs,
@@ -98,10 +100,13 @@ def separable_conv2d_same(inputs,
                           regularize_depthwise=False,
                           scope=None,
                           **kwargs):
-  """Strided 2-D separable convolution with 'SAME' padding.
+  """Strided 跨步的 带步长的 2-D separable convolution with 'SAME' padding.
 
-  If stride > 1 and use_explicit_padding is True, then we do explicit zero-
+  解决slim.separable_conv2d在输入宽或者高为奇数时且use_explicit_padding=False时会带来一个像素的误差的问题 
+
+  If stride > 1 and use_explicit_padding 显示填充？？？？？ is True, then we do explicit zero-
   padding, followed by conv2d with 'VALID' padding.
+  'VALID' 和 'SAME' 的区别 https://blog.csdn.net/wuzqchom/article/details/74785643
 
   Note that
 
@@ -123,7 +128,7 @@ def separable_conv2d_same(inputs,
   current function.
 
   Consequently, if the input feature map has even height or width, setting
-  `use_explicit_padding=False` will result in feature misalignment by one pixel
+  `use_explicit_padding=False` will result in feature misalignment 未对准 by one pixel
   along the corresponding dimension.
 
   Args:
