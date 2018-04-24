@@ -22,10 +22,11 @@ import collections
 import tensorflow as tf
 
 flags = tf.app.flags
-#tf定义了tf.app.flags，用于支持接受命令行传递参数 第一个是参数名称，第二个参数是默认值，第三个是参数描述
-#tf.app.flags.DEFINE_xxx()就是添加命令行的optional argument（可选参数），而tf.app.flags.FLAGS可以从对应的命令行参数取出参数用于打印什么的
 # Flags for input preprocessing.
+#tf定义了tf.app.flags，用于支持接受命令行传递参数 第一个是参数名称，第二个参数是默认值，第三个是参数描述 如果有四个参数第三个是可选参数的列表，第四个是参数描述
+#tf.app.flags.DEFINE_xxx()就是添加命令行的optional argument（可选参数），而tf.app.flags.FLAGS可以从对应的命令行参数取出参数用于打印什么的
 #大体用法： python common.py --logits_kernel_size 7
+#然后对于'xception_65', 'mobilenet_v2'各种参数的设定就比较方便了
 flags.DEFINE_integer('min_resize_value', None,
                      'Desired size of the smaller image side.')
 
@@ -40,6 +41,7 @@ flags.DEFINE_integer('resize_factor', None,
 flags.DEFINE_integer('logits_kernel_size', 1,
                      'The kernel size for the convolutional kernel that '
                      'generates logits.')
+#logits 评定模型？分类评定模型？softmax的输入？
 
 # When using 'mobilent_v2', we set atrous_rates = decoder_output_stride = None.
 # When using 'xception_65', we set atrous_rates = [6, 12, 18] (output stride 16)
@@ -113,7 +115,7 @@ class ModelOptions(
         'logits_kernel_size',
         'model_variant'
     ])):
-  """Immutable class to hold model options."""
+  """Immutable 不可改变的 class to hold model options."""
 
   __slots__ = ()
 
@@ -135,6 +137,9 @@ class ModelOptions(
     Returns:
       A new ModelOptions instance.
     """
+#所以在你给出的代码中，用super(Singleton, cls).__new__(cls, *args, **kwargs) 实现对object的__new__方法的调用。
+#这是super最常见的用法， 因为子类中定义__new__ 或 __init__等方法会覆盖父类中的同名方法。
+#为了获得父类中同名方法的功能，需要这样显示调用父类中的同名方法。
     return super(ModelOptions, cls).__new__(
         cls, outputs_to_num_classes, crop_size, atrous_rates, output_stride,
         FLAGS.merge_method, FLAGS.add_image_level_feature,
