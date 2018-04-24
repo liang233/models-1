@@ -23,6 +23,7 @@ from nets.mobilenet import mobilenet_v2
 
 
 slim = tf.contrib.slim
+#用于简化网络定义
 
 # Default end point for MobileNetv2.
 _MOBILENET_V2_FINAL_ENDPOINT = 'layer_18'
@@ -34,7 +35,7 @@ def _mobilenet_v2(net,
                   reuse=None,
                   scope=None,
                   final_endpoint=None):
-  """Auxiliary function to add support for 'reuse' to mobilenet_v2.
+  """Auxiliary 辅助的 function to add support for 'reuse' to mobilenet_v2.
 
   Args:
     net: Input tensor of shape [batch_size, height, width, channels].
