@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
-"""Wrapper for providing semantic segmentation data."""
+"""Wrapper for providing semantic segmentation data. 封装用来提供数据"""
 
 import tensorflow as tf
 from deeplab import common
