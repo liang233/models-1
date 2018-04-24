@@ -125,7 +125,12 @@ def create_label_colormap(dataset=_PASCAL):
 
 def label_to_color_image(label, dataset=_PASCAL):
   """Adds color defined by the dataset colormap to the label.
-    返回某一种类别对应的colormap值 如[  0 128 128] 好好奇输入lable长啥样子
+    返回某一种类别对应的colormap值 参数和返回值样例：
+    label = np.array([[0, 16, 16], [52, 7, 52]])
+    expected_result = np.array([
+        [[0, 0, 0], [0, 64, 0], [0, 64, 0]],
+        [[0, 64, 192], [128, 128, 128], [0, 64, 192]]
+    ])
   Args:
     label: A 2D array with integer type, storing the segmentation label.
     dataset: The colormap used in the dataset.
