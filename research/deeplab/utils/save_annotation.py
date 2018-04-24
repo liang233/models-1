@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
-"""Saves an annotation as one png image.
+"""Saves an annotation 注释，图像的标注 （image tagging or annotation 图像标注） as one png image.
 
 This script saves an annotation as one png image, and has the option to add
 colormap to the png image for better visualization.
@@ -20,6 +20,7 @@ colormap to the png image for better visualization.
 
 import numpy as np
 import PIL.Image as img
+#Python Imaging Library，已经是Python平台事实上的图像处理标准库了
 import tensorflow as tf
 
 from deeplab.utils import get_dataset_colormap
@@ -41,6 +42,7 @@ def save_annotation(label,
     colormap_type: Colormap type for visualization.
   """
   # Add colormap for visualizing the prediction.
+  #如果add_colormap为真只保存颜色映射值 为假只保存标注值
   if add_colormap:
     colored_label = get_dataset_colormap.label_to_color_image(
         label, colormap_type)
