@@ -13,7 +13,7 @@
 # limitations under the License.
 # ==============================================================================
 
-"""Prepares the data used for DeepLab training/evaluation."""
+"""Prepares the data used for DeepLab training/evaluation评估. 对数据进行预处理"""
 import tensorflow as tf
 from deeplab.core import feature_extractor
 from deeplab.core import preprocess_utils
