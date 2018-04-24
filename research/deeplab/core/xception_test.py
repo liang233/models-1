@@ -15,6 +15,7 @@
 
 """Tests for xception.py."""
 import six
+#为了让同样的代码在不同python版本之间通用
 import numpy as np
 import tensorflow as tf
 
