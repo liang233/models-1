@@ -13,17 +13,19 @@
 # limitations under the License.
 # ==============================================================================
 """Provides flags that are common to scripts.
-
-Common flags from train/eval/vis/export_model.py are collected in this script.
+	simplify names; bugfix for single-GPU training ？？？  编辑之前 主目录里看到的对代码的描述
+  
+  Common flags from train/eval/vis/export_model.py are collected in this script.
 """
 import collections
 
 import tensorflow as tf
 
 flags = tf.app.flags
-
+#tf定义了tf.app.flags，用于支持接受命令行传递参数 第一个是参数名称，第二个参数是默认值，第三个是参数描述
+#tf.app.flags.DEFINE_xxx()就是添加命令行的optional argument（可选参数），而tf.app.flags.FLAGS可以从对应的命令行参数取出参数用于打印什么的
 # Flags for input preprocessing.
-
+#大体用法： python common.py --logits_kernel_size 7
 flags.DEFINE_integer('min_resize_value', None,
                      'Desired size of the smaller image side.')
 
