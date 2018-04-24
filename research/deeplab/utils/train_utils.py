@@ -29,10 +29,10 @@ def add_softmax_cross_entropy_loss_for_each_scale(scales_to_logits,
                                                   upsample_logits=True,
                                                   scope=None):
   """Adds softmax cross entropy loss for logits of each scale.
-
+  logits: 未归一化的概率， 一般也就是softmax的输入 即前一层的输出
   Args:
     scales_to_logits: A map from logits names for different scales to logits.
-      The logits have shape [batch, logits_height, logits_width, num_classes].
+    The logits have shape [batch, logits_height, logits_width, num_classes].
     labels: Groundtruth labels with shape [batch, image_height, image_width, 1].
     num_classes: Integer, number of target classes.
     ignore_label: Integer, label to ignore.
