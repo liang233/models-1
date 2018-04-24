@@ -22,7 +22,7 @@ from deeplab.utils import get_dataset_colormap
 
 
 class VisualizationUtilTest(tf.test.TestCase):
-
+#可以理解assert断言语句为raise-if-not，用来测试表示式，其返回值为假，就会触发异常
   def testBitGet(self):
     """Test that if the returned bit value is correct."""
     self.assertEqual(1, get_dataset_colormap.bit_get(9, 0))
@@ -55,6 +55,7 @@ class VisualizationUtilTest(tf.test.TestCase):
   def testUnExpectedLabelValueForLabelToPASCALColorImage(self):
     """Raise ValueError when input value exceeds range."""
     label = np.array([[120], [300]])
+    #为啥要加个with??
     with self.assertRaises(ValueError):
       get_dataset_colormap.label_to_color_image(
           label, get_dataset_colormap.get_pascal_name())
