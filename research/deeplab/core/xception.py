@@ -153,7 +153,7 @@ def separable_conv2d_same(inputs,
       the convolution output.
   """
   def _separable_conv2d(padding):
-    """Wrapper for separable conv2d."""
+    """Wrapper 封装 for separable conv2d."""
     return slim.separable_conv2d(inputs,
                                  num_outputs,
                                  kernel_size,
@@ -164,7 +164,7 @@ def separable_conv2d_same(inputs,
                                  scope=scope,
                                  **kwargs)
   def _split_separable_conv2d(padding):
-    """Splits separable conv2d into depthwise and pointwise conv2d."""
+    """Splits 分裂 分开 separable conv2d into depthwise and pointwise conv2d."""
     outputs = slim.separable_conv2d(inputs,
                                     None,
                                     kernel_size,
@@ -206,10 +206,9 @@ def xception_module(inputs,
                     scope=None):
   """An Xception module.
 
-  The output of one Xception module is equal to the sum of `residual` and
+  The output of one Xception module is equal to the sum of `residual`残留的 and
   `shortcut`, where `residual` is the feature computed by three separable
   convolution. The `shortcut` is the feature computed by 1x1 convolution with
-  1*1卷积一次只能得到一个w*h*1吗？
   or without striding. In some cases, the `shortcut` path could be a simple
   identity function or none (i.e, no shortcut).
 
