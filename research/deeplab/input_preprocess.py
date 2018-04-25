@@ -15,12 +15,12 @@
 
 """Prepares the data used for DeepLab training/evaluation评估. 对数据进行预处理"""
 import tensorflow as tf
-from deeplab.core import feature_extractor
-from deeplab.core import preprocess_utils
+from deeplab.core import feature_extractor #对xception 和 mobilenet进行特征提取
+from deeplab.core import preprocess_utils #主要是一些矩阵基础操作的实现
 
 
 # The probability of flipping the images and labels
-# left-right during training
+# left-right during training 左右翻转图片和标签？
 _PROB_OF_FLIP = 0.5
 
 
@@ -38,16 +38,16 @@ def preprocess_image_and_label(image,
                                is_training=True,
                                model_variant=None):
   """Preprocesses the image and label.
-
+  才反应过来原来lable是图片...
   Args:
     image: Input image.
-    label: Ground truth annotation label.
+    label: Ground truth annotation 注释 label.
     crop_height: The height value used to crop the image and label.
     crop_width: The width value used to crop the image and label.
     min_resize_value: Desired size of the smaller image side.
     max_resize_value: Maximum allowed size of the larger image side.
     resize_factor: Resized dimensions are multiple of factor plus one.
-    min_scale_factor: Minimum scale factor value.
+    min_scale_factor: Minimum scale factor value.?????????????????????????????????????????????????
     max_scale_factor: Maximum scale factor value.
     scale_factor_step_size: The step size from min scale factor to max scale
       factor. The input is randomly scaled based on the value of
@@ -55,7 +55,7 @@ def preprocess_image_and_label(image,
     ignore_label: The label value which will be ignored for training and
       evaluation.
     is_training: If the preprocessing is used for training or not.
-    model_variant: Model variant (string) for choosing how to mean-subtract the
+    model_variant: Model variant 变量 变体 变种(string) for choosing how to mean-subtract 平均-减去？ the
       images. See feature_extractor.network_map for supported model variants.
 
   Returns:
