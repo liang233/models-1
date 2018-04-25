@@ -55,7 +55,7 @@ def _mobilenet_v2(net,
   Returns:
     Features extracted by MobileNetv2.
   """
-  with tf.variable_scope(
+  with tf.variable_scope(#主要是为了实现变量共享 https://blog.csdn.net/jerr__y/article/details/60877873
       scope, 'MobilenetV2', [net], reuse=reuse) as scope:
     return mobilenet_lib.mobilenet_base(
         net,
