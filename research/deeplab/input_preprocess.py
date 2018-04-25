@@ -38,7 +38,7 @@ def preprocess_image_and_label(image,
                                is_training=True,
                                model_variant=None):
   """Preprocesses the image and label.
-  才反应过来原来lable是图片...
+  一个图片可以有多个lable（标签）
   Args:
     image: Input image.
     label: Ground truth annotation 注释 label.
