@@ -13,7 +13,7 @@
 # limitations under the License.
 # ==============================================================================
 
-"""Prepares the data used for DeepLab training/evaluation评估. 对数据进行预处理"""
+"""Prepares the data used for DeepLab training/evaluation预测 评估. 对数据进行预处理"""
 import tensorflow as tf
 from deeplab.core import feature_extractor #对xception 和 mobilenet进行特征提取
 from deeplab.core import preprocess_utils #主要是一些矩阵基础操作的实现
