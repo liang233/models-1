@@ -21,10 +21,13 @@
 #   # From the tensorflow/models/research/deeplab directory.
 #   sh ./local_test.sh
 #
-#
+
+#BOOK；跟我一起写 Makefile
 
 # Exit immediately if a command exits with a non-zero status.
 set -e
+#“set -e” 这句语句告诉bash如果任何语句的执行结果不是true则应该退出。这样的好处是防止错误像滚雪球般变大导致一个致命的错误，
+#而这些错误本应该在之前就被处理掉。如果要增加可读性，可以使用set -o errexit，它的作用与set -e相同
 
 # Move one-level up to tensorflow/models/research directory.
 cd ..
@@ -60,12 +63,14 @@ mkdir -p "${TRAIN_LOGDIR}"
 mkdir -p "${EVAL_LOGDIR}"
 mkdir -p "${VIS_LOGDIR}"
 mkdir -p "${EXPORT_DIR}"
+#创建文件夹用于保存数据集和训练
 
 # Copy locally the trained checkpoint as the initial checkpoint.
 TF_INIT_ROOT="http://download.tensorflow.org/models"
 TF_INIT_CKPT="deeplabv3_pascal_train_aug_2018_01_04.tar.gz"
 cd "${INIT_FOLDER}"
 wget -nd -c "${TF_INIT_ROOT}/${TF_INIT_CKPT}"
+#下载链接中的内容并添加到本地目录
 tar -xf "${TF_INIT_CKPT}"
 cd "${CURRENT_DIR}"
 
@@ -146,5 +151,5 @@ python "${WORK_DIR}"/export_model.py \
   --crop_size=513 \
   --inference_scales=1.0
 
-# Run inference with the exported checkpoint.
+# Run inference 推断 with the exported checkpoint.导出的参数文件
 # Please refer to the provided deeplab_demo.ipynb for an example.
