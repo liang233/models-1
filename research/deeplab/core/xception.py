@@ -36,7 +36,8 @@ We made a few more changes on top of MSRA's modifications:
 
 2. We support adding ReLU and BatchNorm after depthwise convolution, motivated
   by the design of MobileNetv1.
-
+  池化层全部改成深度可分离卷积，并在之后都加上BN和ReLU
+  
 "MobileNets: Efficient Convolutional Neural Networks for Mobile Vision
 Applications"
 Andrew G. Howard, Menglong Zhu, Bo Chen, Dmitry Kalenichenko, Weijun Wang,
@@ -47,10 +48,11 @@ import collections
 import tensorflow as tf
 
 from tensorflow.contrib.slim.nets import resnet_utils
+#https://github.com/tensorflow/tensorflow/blob/master/tensorflow/contrib/slim/python/slim/nets/resnet_utils.py
 
 slim = tf.contrib.slim
 
-_DEFAULT_MULTI_GRID = [1, 1, 1]#默认多重网格？
+_DEFAULT_MULTI_GRID = [1, 1, 1]#默认多重网格??
 
 class Block(collections.namedtuple('Block', ['scope', 'unit_fn', 'args'])):
   """A named tuple describing an Xception block.
