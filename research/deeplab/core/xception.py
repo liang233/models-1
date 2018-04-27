@@ -22,7 +22,7 @@ https://arxiv.org/abs/1610.02357
 We implement the modified version by Jifeng Dai et al. for their COCO 2017
 detection challenge submission, where the model is made deeper and has aligned 对齐的 对准的  均衡的
 features for dense prediction tasks. See their slides for details:
-
+特征对齐？？？？？？
 "Deformable Convolutional Networks -- COCO Detection and Segmentation Challenge
 2017 Entry"
 Haozhi Qi, Zheng Zhang, Bin Xiao, Han Hu, Bowen Cheng, Yichen Wei and Jifeng Dai
@@ -30,7 +30,7 @@ ICCV 2017 COCO Challenge workshop
 http://presentations.cocodataset.org/COCO17-Detect-MSRA.pdf
 
 We made a few more changes on top of MSRA's modifications:
-1. Fully convolutional: All the max-pooling layers are replaced with separable 可分离的
+1. Fully convolutional: All the max-pooling layers are replaced with separable
   conv2d 也就是深度可分离卷积 with stride = 2. This allows us to use atrous convolution 稀疏卷积 to extract
   feature maps at any resolution 分辨率.
 
@@ -52,7 +52,7 @@ from tensorflow.contrib.slim.nets import resnet_utils
 
 slim = tf.contrib.slim
 
-_DEFAULT_MULTI_GRID = [1, 1, 1]#默认多重网格??
+_DEFAULT_MULTI_GRID = [1, 1, 1]#determining the unit rate in the corresponding xception block
 
 class Block(collections.namedtuple('Block', ['scope', 'unit_fn', 'args'])):
   """A named tuple describing an Xception block.
@@ -303,12 +303,12 @@ def stack_blocks_dense(net,
                        blocks,
                        output_stride=None,
                        outputs_collections=None):
-  """Stacks Xception blocks and controls output feature density.
+  """Stacks Xception blocks and controls output feature density密度.
 
-  First, this function creates scopes for the Xception in the form of
+  First, this function creates scopes 空间？for the Xception in the form of
   'block_name/unit_1', 'block_name/unit_2', etc.
 
-  Second, this function allows the user to explicitly control the output
+  Second, this function allows the user to explicitly 明白地，明确地 control the output
   stride, which is the ratio of the input to output spatial resolution. This
   is useful for dense prediction tasks such as semantic segmentation or
   object detection.
@@ -326,6 +326,7 @@ def stack_blocks_dense(net,
       For example, if the Xception employs units with strides 1, 2, 1, 3, 4, 1,
       then valid values for the output_stride are 1, 2, 6, 24 or None (which
       is equivalent to output_stride=24).
+      train.py中设置了output_stride=16 xception中的stride有4个2其余全是1，刚好可以相乘凑出16
     outputs_collections: Collection to add the Xception block outputs.
 
   Returns:
@@ -335,7 +336,7 @@ def stack_blocks_dense(net,
     ValueError: If the target output_stride is not valid.
   """
   # The current_stride variable keeps track of the effective stride of the
-  # activations. This allows us to invoke atrous convolution whenever applying
+  # activations. (看不懂这句话This allows us to invoke atrous convolution whenever applying
   # the next residual unit would result in the activations having stride larger
   # than the target output_stride.
   current_stride = 1
@@ -344,8 +345,8 @@ def stack_blocks_dense(net,
   rate = 1
 
   for block in blocks:
-    with tf.variable_scope(block.scope, 'block', [net]) as sc:
-      for i, unit in enumerate(block.args):
+    with tf.variable_scope(block.scope, 'block', [net]) as sc:#?????
+      for i, unit in enumerate(block.args):#i从0开始自增 unit枚举block.args的所有参数
         if output_stride is not None and current_stride > output_stride:
           raise ValueError('The target output_stride cannot be reached.')
         with tf.variable_scope('unit_%d' % (i + 1), values=[net]):
@@ -353,15 +354,15 @@ def stack_blocks_dense(net,
           # atrous convolution with stride=1 and multiply the atrous rate by the
           # current unit's stride for use in subsequent layers.
           if output_stride is not None and current_stride == output_stride:
-            net = block.unit_fn(net, rate=rate, **dict(unit, stride=1))
+            net = block.unit_fn(net, rate=rate, **dict(unit, stride=1))#?????????????
             rate *= unit.get('stride', 1)
           else:
             net = block.unit_fn(net, rate=1, **unit)
-            current_stride *= unit.get('stride', 1)
+            current_stride *= unit.get('stride', 1)# 把参数stride=2看做字典，get函数返回2
 
       # Collect activations at the block's end before performing subsampling.
       net = slim.utils.collect_named_outputs(outputs_collections, sc.name, net)
-
+      #将变量取个别名，并收集到collection中 返回本次添加的tensor对象
   if output_stride is not None and current_stride != output_stride:
     raise ValueError('The target output_stride cannot be reached.')
 
@@ -380,7 +381,7 @@ def xception(inputs,
   """Generator for Xception models.
 
   This function generates a family of Xception models. See the xception_*()
-  methods for specific model instantiations, obtained by selecting different
+  methods for specific model instantiations 实例化 例示, obtained by selecting different
   block instantiations that produce Xception of various depths.
 
   Args:
@@ -392,6 +393,7 @@ def xception(inputs,
       element is an Xception Block object describing the units in the block.
     num_classes: Number of predicted classes for classification tasks.
       If 0 or None, we return the features before the logit layer.
+      在哪里传参数？
     is_training: whether batch_norm layers are in training mode.
     global_pool: If True, we perform global average pooling before computing the
       logits. Set to True for image classification, False for dense prediction.
@@ -407,7 +409,7 @@ def xception(inputs,
     net: A rank-4 tensor of size [batch, height_out, width_out, channels_out].
       If global_pool is False, then height_out and width_out are reduced by a
       factor of output_stride compared to the respective height_in and width_in,
-      else both height_out and width_out equal one. If num_classes is 0 or None,
+      else both height_out and width_out equal one.？？？？？？？？？？？？？？ If num_classes is 0 or None,
       then net is the output of the last Xception block, potentially after
       global average pooling. If num_classes is a non-zero integer, net contains
       the pre-softmax activations.
@@ -426,21 +428,22 @@ def xception(inputs,
                          stack_blocks_dense],
                         outputs_collections=end_points_collection):
       with slim.arg_scope([slim.batch_norm], is_training=is_training):
-        net = inputs
+        net = inputs#网络第1层
         if output_stride is not None:
           if output_stride % 2 != 0:
             raise ValueError('The output_stride needs to be a multiple of 2.')
           output_stride /= 2
         # Root block function operated on inputs.
         net = resnet_utils.conv2d_same(net, 32, 3, stride=2,
-                                       scope='entry_flow/conv1_1')
+                                       scope='entry_flow/conv1_1')#网络第2层
         net = resnet_utils.conv2d_same(net, 64, 3, stride=1,
-                                       scope='entry_flow/conv1_2')
+                                       scope='entry_flow/conv1_2')#网络第3层
 
         # Extract features for entry_flow, middle_flow, and exit_flow.
         net = stack_blocks_dense(net, blocks, output_stride)
-
-        # Convert end_points_collection into a dictionary of end_points.
+        #Stacks Xception blocks and controls output feature density密度
+        
+        # Convert end_points_collection into a dictionary of end_points. 为什么？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？
         end_points = slim.utils.convert_collection_to_dict(
             end_points_collection, clear_collection=True)
 
@@ -522,21 +525,21 @@ def xception_65(inputs,
                      skip_connection_type='conv',
                      activation_fn_in_separable_conv=False,
                      regularize_depthwise=regularize_depthwise,
-                     num_units=1,
+                     num_units=1,#???????????????????????????
                      stride=2),
       xception_block('entry_flow/block3',
                      depth_list=[728, 728, 728],
                      skip_connection_type='conv',
                      activation_fn_in_separable_conv=False,
                      regularize_depthwise=regularize_depthwise,
-                     num_units=1,
+                     num_units=1,#?????????????????????????????
                      stride=2),
       xception_block('middle_flow/block1',
                      depth_list=[728, 728, 728],
                      skip_connection_type='sum',
                      activation_fn_in_separable_conv=False,
                      regularize_depthwise=regularize_depthwise,
-                     num_units=16,
+                     num_units=16,#重复16次
                      stride=1),
       xception_block('exit_flow/block1',
                      depth_list=[728, 1024, 1024],
