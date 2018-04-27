@@ -52,7 +52,7 @@ from tensorflow.contrib.slim.nets import resnet_utils
 
 slim = tf.contrib.slim
 
-_DEFAULT_MULTI_GRID = [1, 1, 1]#determining the unit rate in the corresponding xception block
+_DEFAULT_MULTI_GRID = [1, 1, 1]#determining the unit rate in the corresponding xception block 全程使用默认参数
 
 class Block(collections.namedtuple('Block', ['scope', 'unit_fn', 'args'])):
   """A named tuple describing an Xception block.
@@ -354,7 +354,7 @@ def stack_blocks_dense(net,
           # atrous convolution with stride=1 and multiply the atrous rate by the
           # current unit's stride for use in subsequent layers.
           if output_stride is not None and current_stride == output_stride:
-            net = block.unit_fn(net, rate=rate, **dict(unit, stride=1))#?????????????
+？            net = =(net, rate=rate, **dict(unit, stride=1))
             rate *= unit.get('stride', 1)
           else:
             net = block.unit_fn(net, rate=1, **unit)
@@ -436,6 +436,7 @@ def xception(inputs,
         # Root block function operated on inputs.
         net = resnet_utils.conv2d_same(net, 32, 3, stride=2,
                                        scope='entry_flow/conv1_1')#网络第2层
+        #https://github.com/tensorflow/tensorflow/blob/master/tensorflow/contrib/slim/python/slim/nets/resnet_utils.py#L87
         net = resnet_utils.conv2d_same(net, 64, 3, stride=1,
                                        scope='entry_flow/conv1_2')#网络第3层
 
@@ -472,8 +473,8 @@ def xception_block(scope,
   """Helper function for creating a Xception block.
 
   Args:
-    scope: The scope of the block.
-    depth_list: The depth of the bottleneck layer for each unit.
+？    scope: The scope of the block.
+？    depth_list: The depth of the bottleneck layer for each unit.
     skip_connection_type: Skip connection type for the residual path. Only
       supports 'conv', 'sum', or 'none'.
     activation_fn_in_separable_conv: Includes activation function in the
@@ -483,7 +484,7 @@ def xception_block(scope,
     num_units: The number of units in the block.
     stride: The stride of the block, implemented as a stride in the last unit.
       All other units have stride=1.
-    unit_rate_list: A list of three integers, determining the unit rate in the
+？全是1    unit_rate_list: A list of three integers, determining the unit rate in the
       corresponding xception block.
 
   Returns:
@@ -505,7 +506,7 @@ def xception_65(inputs,
                 num_classes=None,
                 is_training=True,
                 global_pool=True,
-                keep_prob=0.5,
+                keep_prob=0.5,#dropout layer中的参数
                 output_stride=None,
                 regularize_depthwise=False,
                 multi_grid=None,
@@ -525,14 +526,14 @@ def xception_65(inputs,
                      skip_connection_type='conv',
                      activation_fn_in_separable_conv=False,
                      regularize_depthwise=regularize_depthwise,
-                     num_units=1,#???????????????????????????
+？                     num_units=1,
                      stride=2),
       xception_block('entry_flow/block3',
                      depth_list=[728, 728, 728],
                      skip_connection_type='conv',
                      activation_fn_in_separable_conv=False,
                      regularize_depthwise=regularize_depthwise,
-                     num_units=1,#?????????????????????????????
+                     num_units=1,
                      stride=2),
       xception_block('middle_flow/block1',
                      depth_list=[728, 728, 728],
@@ -579,14 +580,14 @@ def xception_arg_scope(weight_decay=0.00004,
   """Defines the default Xception arg scope.
 
   Args:
-    weight_decay: The weight decay to use for regularizing the model.
+    weight_decay: The weight decay to use for regularizing 调整 the model. 权值衰减，一个用于防止过拟合的超参数
     batch_norm_decay: The moving average decay when estimating layer activation
       statistics in batch normalization.
     batch_norm_epsilon: Small constant to prevent division by zero when
       normalizing activations by their variance in batch normalization.
     batch_norm_scale: If True, uses an explicit `gamma` multiplier to scale the
       activations in the batch normalization layer.
-    weights_initializer_stddev: The standard deviation of the trunctated normal
+    weights_initializer_stddev: The standard deviation 标准差 of the trunctated normal 截断正态分布
       weight initializer.
     activation_fn: The activation function in Xception.
     regularize_depthwise: Whether or not apply L2-norm regularization on the
@@ -594,24 +595,24 @@ def xception_arg_scope(weight_decay=0.00004,
     use_batch_norm: Whether or not to use batch normalization.
 
   Returns:
-    An `arg_scope` to use for the Xception models.
+    An `arg_scope` to use for the Xception models.  
   """
   batch_norm_params = {
       'decay': batch_norm_decay,
       'epsilon': batch_norm_epsilon,
       'scale': batch_norm_scale,
   }
-  if regularize_depthwise:
+  if regularize_depthwise:#若要使用L2正则化
     depthwise_regularizer = slim.l2_regularizer(weight_decay)
   else:
     depthwise_regularizer = None
   with slim.arg_scope(
       [slim.conv2d, slim.separable_conv2d],
       weights_initializer=tf.truncated_normal_initializer(
-          stddev=weights_initializer_stddev),
+          stddev=weights_initializer_stddev),#从截断的正态分布中输出随机值，给定标准差
       activation_fn=activation_fn,
       normalizer_fn=slim.batch_norm if use_batch_norm else None):
-    with slim.arg_scope([slim.batch_norm], **batch_norm_params):
+？    with slim.arg_scope([slim.batch_norm], **batch_norm_params):
       with slim.arg_scope(
           [slim.conv2d],
           weights_regularizer=slim.l2_regularizer(weight_decay)):
