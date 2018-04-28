@@ -393,7 +393,6 @@ def xception(inputs,
       element is an Xception Block object describing the units in the block.
     num_classes: Number of predicted classes for classification tasks.
       If 0 or None, we return the features before the logit layer.
-      在哪里传参数？
     is_training: whether batch_norm layers are in training mode.
     global_pool: If True, we perform global average pooling before computing the
       logits. Set to True for image classification, False for dense prediction.
@@ -444,13 +443,13 @@ def xception(inputs,
         net = stack_blocks_dense(net, blocks, output_stride)
         #Stacks Xception blocks and controls output feature density密度
         
-        # Convert end_points_collection into a dictionary of end_points. 为什么？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？
-        end_points = slim.utils.convert_collection_to_dict(
+？        # Convert end_points_collection into a dictionary of end_points. 
+        end_points = slim.utils.convert_collection_to_dict(#集合转换为字典，{节点名：输出张量值}
             end_points_collection, clear_collection=True)
-
+        #end_points_collection=xceptionend_points
         if global_pool:
           # Global average pooling.
-          net = tf.reduce_mean(net, [1, 2], name='global_pool', keepdims=True)
+          net = tf.reduce_mean(net, [1, 2], name='global_pool', keepdims=True)#在1,2维上求平均值
           end_points['global_pool'] = net
         if num_classes:
           net = slim.dropout(net, keep_prob=keep_prob, is_training=is_training,
@@ -484,14 +483,14 @@ def xception_block(scope,
     num_units: The number of units in the block.
     stride: The stride of the block, implemented as a stride in the last unit.
       All other units have stride=1.
-？全是1    unit_rate_list: A list of three integers, determining the unit rate in the
+？全是1    unit_rate_list: A list of three integers, determining the unit rate 单位率？ in the
       corresponding xception block.
 
   Returns:
     An Xception block.
   """
   if unit_rate_list is None:
-    unit_rate_list = _DEFAULT_MULTI_GRID
+？    unit_rate_list = _DEFAULT_MULTI_GRID
   return Block(scope, xception_module, [{
       'depth_list': depth_list,
       'skip_connection_type': skip_connection_type,
@@ -526,7 +525,7 @@ def xception_65(inputs,
                      skip_connection_type='conv',
                      activation_fn_in_separable_conv=False,
                      regularize_depthwise=regularize_depthwise,
-？                     num_units=1,
+                     num_units=1,
                      stride=2),
       xception_block('entry_flow/block3',
                      depth_list=[728, 728, 728],
@@ -612,7 +611,7 @@ def xception_arg_scope(weight_decay=0.00004,
           stddev=weights_initializer_stddev),#从截断的正态分布中输出随机值，给定标准差
       activation_fn=activation_fn,
       normalizer_fn=slim.batch_norm if use_batch_norm else None):
-？    with slim.arg_scope([slim.batch_norm], **batch_norm_params):
+？    with slim.arg_scope([slim.batch_norm], **batch_norm_params):#**作用于字典吗？
       with slim.arg_scope(
           [slim.conv2d],
           weights_regularizer=slim.l2_regularizer(weight_decay)):
