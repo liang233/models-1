@@ -20,11 +20,11 @@ the following features:
 (1) Atrous convolution to explicitly control the resolution at which
 feature responses are computed within Deep Convolutional Neural Networks.
 
-(2) Atrous spatial pyramid pooling (ASPP) to robustly segment objects at
+(2) Atrous spatial pyramid pooling (ASPP) to robustly 鲁棒地 稳定地 segment objects at
 multiple scales with filters at multiple sampling rates and effective
 fields-of-views.
 
-(3) ASPP module augmented with image-level feature and batch normalization.
+(3) ASPP module augmented 增强 with image-level feature and batch normalization.
 
 (4) A simple yet effective decoder module to recover the object boundaries.
 
