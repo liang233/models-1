@@ -94,7 +94,7 @@ def predict_labels_multi_scale(images,
 
   Args:
     images: A tensor of size [batch, height, width, channels].
-    model_options: A ModelOptions instance to configure models.
+    model_options: A ModelOptions instance to configure 配置，设定 models.
     eval_scales: The scales to resize images for evaluation.
     add_flipped_images: Add flipped images for evaluation or not.
 
@@ -105,10 +105,10 @@ def predict_labels_multi_scale(images,
   """
   outputs_to_predictions = {
       output: []
-      for output in model_options.outputs_to_num_classes
+      for output in model_options.outputs_to_num_classes#找不到在哪儿
   }
 
-  for i, image_scale in enumerate(eval_scales):
+  for i, image_scale in enumerate(eval_scales):#(在字典上)列举
     with tf.variable_scope(tf.get_variable_scope(), reuse=True if i else None):
       outputs_to_scales_to_logits = multi_scale_logits(
           images,
