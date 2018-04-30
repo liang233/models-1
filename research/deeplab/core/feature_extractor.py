@@ -203,8 +203,8 @@ def extract_features(images,
         batch_norm_epsilon=1e-3,
         batch_norm_scale=True,
         regularize_depthwise=regularize_depthwise)
-    features, end_points = get_network(
-        model_variant, preprocess_images, arg_scope)(
+    features, end_points = get_network(#定义在下面
+        model_variant, preprocess_images, arg_scope)(#调用里面那层函数
             inputs=images,
             num_classes=num_classes,
             is_training=(is_training and fine_tune_batch_norm),
@@ -257,7 +257,7 @@ def get_network(network_name, preprocess_images, arg_scope=None):
   else:
     preprocess_function = _identity_function
   func = networks_map[network_name]
-  @functools.wraps(func)
+  @functools.wraps(func)#用于追踪函数的调用过程及函数调用的返回值 可以计算函数执行时间之类的
   def network_fn(inputs, *args, **kwargs):
     with slim.arg_scope(arg_scope):
       return func(preprocess_function(inputs), *args, **kwargs)
