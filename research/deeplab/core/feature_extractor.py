@@ -42,7 +42,7 @@ def _mobilenet_v2(net,
     depth_multiplier: Float multiplier for the depth (number of channels)
       for all convolution ops. The value must be greater than zero. Typical
       usage will be to set this value in (0, 1) to reduce the number of
-      parameters or computation cost of the model.
+      parameters or computation cost of the model.降维用的
     output_stride: An integer that specifies the requested ratio of input to
       output spatial resolution. If not None, then we invoke atrous convolution
       if necessary to prevent the network from reducing the spatial resolution
@@ -51,7 +51,7 @@ def _mobilenet_v2(net,
     reuse: Reuse model variables.
     scope: Optional variable scope.
     final_endpoint: The endpoint to construct the network up to.
-
+    在加载模型的时候,使用final_endpoint参数,指定模型阶段点
   Returns:
     Features extracted by MobileNetv2.
   """
@@ -180,7 +180,7 @@ def extract_features(images,
     preprocess_images: Performs preprocessing on images or not. Defaults to
       True. Set to False if preprocessing will be done by other functions. We
       supprot two types of preprocessing: (1) Mean pixel substraction and (2)
-      Pixel values normalization to be [-1, 1].
+      Pixel values normalization to be [-1, 1].为啥要有像素值的归一化或者减去125附近的值？？？？？？？？？？？？
     num_classes: Number of classes for image classification task. Defaults
       to None for dense prediction tasks.
     global_pool: Global pooling for image classification task. Defaults to
