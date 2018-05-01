@@ -28,8 +28,9 @@ from deployment import model_deploy
 
 slim = tf.contrib.slim
 
-prefetch_queue = slim.prefetch_queue
+prefetch_queue = slim.prefetch_queue #用于读取文件的
 
+#下面都是添加命令行可选参数的
 flags = tf.app.flags
 
 FLAGS = flags.FLAGS
@@ -40,7 +41,7 @@ flags.DEFINE_integer('num_clones', 1, 'Number of clones to deploy.')
 
 flags.DEFINE_boolean('clone_on_cpu', False, 'Use CPUs to deploy clones.')
 
-flags.DEFINE_integer('num_replicas', 1, 'Number of worker replicas.')
+flags.DEFINE_integer('num_replicas', 1, 'Number of worker replicas.') #复制品
 
 flags.DEFINE_integer('startup_delay_steps', 15,
                      'Number of training steps between replicas startup.')
