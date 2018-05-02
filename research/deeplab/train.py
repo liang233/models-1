@@ -243,7 +243,7 @@ def main(unused_argv):
 
   tf.gfile.MakeDirs(FLAGS.train_logdir)
   tf.logging.info('Training on %s set', FLAGS.train_split)
-
+  #输入
   with tf.Graph().as_default() as graph:
     with tf.device(config.inputs_device()):
       samples = input_generator.get(
@@ -271,6 +271,7 @@ def main(unused_argv):
       model_args = (inputs_queue, {
           common.OUTPUT_TYPE: dataset.num_classes
       }, dataset.ignore_label)
+      #https://github.com/tensorflow/models/blob/master/research/deeplab/datasets/segmentation_dataset.py
       clones = model_deploy.create_clones(config, model_fn, args=model_args)
 
       # Gather update_ops from the first clone. These contain, for example,
@@ -305,7 +306,7 @@ def main(unused_argv):
     for loss in tf.get_collection(tf.GraphKeys.LOSSES, first_clone_scope):
       summaries.add(tf.summary.scalar('losses/%s' % loss.op.name, loss))
 
-    # Build the optimizer based on the device specification.
+    # Build the optimizer 最优控制 based on the device specification.
     with tf.device(config.optimizer_device()):
       learning_rate = train_utils.get_model_learning_rate(
           FLAGS.learning_policy, FLAGS.base_learning_rate,
