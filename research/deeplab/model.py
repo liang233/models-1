@@ -196,8 +196,8 @@ def scale_dimension(dim, scale):
   Returns:
     Scaled dimension.
   """
-  if isinstance(dim, tf.Tensor):
-    return tf.cast((tf.to_float(dim) - 1.0) * scale + 1.0, dtype=tf.int32)
+  if isinstance(dim, tf.Tensor):#判断变量类型
+    return tf.cast((tf.to_float(dim) - 1.0) * scale + 1.0, dtype=tf.int32)#将第一个参数的数据格式转化为int32
   else:
     return int((float(dim) - 1.0) * scale + 1.0)
 
