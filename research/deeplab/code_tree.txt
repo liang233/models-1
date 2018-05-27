@@ -1,0 +1,60 @@
++ core                              该文件夹提供了DeepLab v3+的核心模块定义
+	__init__.py                       将该文件夹标识为一个Python模块，通常是空的
+	feature_extractor.py              提取指定网络某一层的输出特征图
+	preprocess_utils.py               一些矩阵基础操作的实现
+	preprocess_utils_test.py          用于测试preprocess_utils.py中有无bug
+	resnet_v1_beta.py                 提供了Resnet v1的变体模型
+	resnet_v1_beta_test.py            用于测试resnet_v1_beta.py中有无bug
+	xception.py                       DeepLab v3+中提出的xception的变体模型定义
+	xception_test.py                  用于测试xception.py中有无bug
+
++ datasets                          该文件夹存储训练和测试用到的数据集，一开始里面有如下文件用来下载和预处理数据集
+	__init__.py                       将该文件夹标识为一个Python模块，通常是空的
+	build_ade20k_data.py              将ADE20K中的图片转换成TFRecord文件形式，TensorFlow支持对TFRecord类型数据的高效读取
+	build_cityscapes_data.py          将cityscapes中的图片转换成TFRecord文件形式
+	build_data.py                     定义了实现上述转换需要用到的函数
+	build_voc2012_data.py             将PASCAL VOC2012中的图片转换成TFRecord文件形式
+	convert_cityscapes.sh             预处理Cityscapes数据集的脚本
+	download_and_convert_ade20k.sh    下载和预处理ADE20K数据集的脚本
+	download_and_convert_voc2012.sh   下载和预处理pascal voc 2012数据集的脚本
+	remove_gt_colormap.py             从分割结果的标准答案（ground truth）中移除颜色填充并保存
+	segmentation_dataset.py           提供三个数据集的信息，如ADE20K数据集包含多少种分割类别，多少张训练图片，多少张测试图片
+
++ g3doc                             该文件夹用于存储/deeplab/README.md里面的内容
+	+ img                             该文件夹用于存储图片
+		image1.jpg                      输入图片1
+		image2.jpg                      输入图片2
+		image3.jpg                      输入图片3
+		image_info.txt                  三张输入图片的URL
+		vis1.png                        图片1的原始图像+分割结果
+		vis2.png                        图片2的原始图像+分割结果
+		vis3.png                        图片3的原始图像+分割结果
+	ade20k.md                         本地在ADE20K数据集运行DeepLab v3+指南
+	cityscapes.md                     本地在Cityscapes数据集运行DeepLab v3+指南
+	export_model.md                   训练完成后保存模型指南
+	faq.md                            常见问题及回答
+	installation.md                   本地配置环境及测试指南
+	model_zoo.md                      提供了在几个数据集中预训练过的DeepLab v3+模型文件
+	pascal.md                         本地在PASCAL VOC 2012数据集运行DeepLab v3+指南
+
++ utils                             提供了一些工具类文件
+	__init__.py                       将该文件夹标识为一个Python模块，通常是空的
+	get_dataset_colormap.py           根据数据集的不同为每种类别设置一种可视化时的颜色，用于为分割结果添加颜色标签
+	get_dataset_colormap_test.py      测试get_dataset_colormap.py有无bug
+	input_generator.py                读取datasets中下载好的数据集中的各种数据，并将其转换为能直接用于训练、测试和可视化的格式
+	save_annotation.py                将分割得到的标签保存为png图像
+	train_utils.py                    定义了几个为训练过程设置参数的函数，包括设置损失函数，从checkpoint文件中读取学习率、函数初始化模型等
+
+README.md                           关于本工程的简介，包括DeepLab系列模型概述，以及相关链接：安装和快速运行指南、训练好的模型下载和主要参考文献
+__init__.py                         将该文件夹标识为一个Python模块，通常是空的
+common.py                           对train/eval/vis/export_model.py里共用的flag参数进行定义，使得相关文件中的函数支持命令行传递参数
+deeplab_demo.ipynb                  用于对Internet中单张图片进行语义分割的ipynb文件
+eval.py                             拿训练好的模型在某一数据集的测试集中测试模型效果
+export_model.py                     将训练好的模型导出为TensorFlow固化图(frozen graph)
+input_preprocess.py                 对输入数据进行预处理
+local_test.sh                       一个用于在本地使用PASCA VOC语义分割数据集对DeepLab v3+进行快速训练和测试的脚本，因此需要先下载数据集。该脚本使用xception作为编码器中的DCNNs进行训练，测试，可视化
+local_test_mobilenetv2.sh           功能同上，只不过编码器中的DCNNs用mobilenetv2代替
+model.py                            DeepLabv3+模型定义
+model_test.py                       测试model.py中有无bug
+train.py                            用于在数据集的训练集中训练模型
+vis.py                              将eval.py中的预测结果可视化
